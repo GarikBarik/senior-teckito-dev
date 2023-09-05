@@ -31,10 +31,7 @@ describe('Smoke testing', () => {
     navigateTo.teamPage()
     onTeamPage.сhangingTheInformationAboutTeammate()
     })
- 
-    
-    
-    })
+  })
   
 
 

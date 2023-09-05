@@ -10,11 +10,14 @@ function generateRandomEmail() {
 
   return `${email}`;
 }
+
 const email = generateRandomEmail();
 
 
 //Функция для извлечения ссылки для завершения регестрации
 function createEmail(email) {
+
+  
   cy.origin('https://qa.team/', { args: { email } }, ({ email }) => {
     cy.visit('https://qa.team/');
     cy.get('form').find('[id="code"]').type(email);
@@ -67,6 +70,8 @@ export class TeamPage{
       cy.wait(1000);
       cy.wrap(createTeammateForm).contains('Select Roles').click({ force: true });
       cy.wrap(createTeammateForm).get('.css-5dm6m1').contains(userRole).click()
+      cy.wrap(createTeammateForm).get('#react-select-3-placeholder').click({ force: true }) 
+      cy.wrap(createTeammateForm).get('.css-5dm6m1').contains('Admin').click()
       cy.wrap(createTeammateForm).find('[placeholder="example@company.com"]').type(`${email + '@qa.team'}`)
       cy.wrap(createTeammateForm).submit()
       cy.wait(5000)
