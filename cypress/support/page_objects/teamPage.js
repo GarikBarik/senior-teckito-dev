@@ -1,3 +1,4 @@
+
 //Функция создания ранжомного эмейла
 function generateRandomEmail() {
   const characters = 'abcdefghijklmnopqrstuvwxyz1234567890';
@@ -13,11 +14,8 @@ function generateRandomEmail() {
 
 const email = generateRandomEmail();
 
-
 //Функция для извлечения ссылки для завершения регестрации
 function createEmail(email) {
-
-  
   cy.origin('https://qa.team/', { args: { email } }, ({ email }) => {
     cy.visit('https://qa.team/');
     cy.get('form').find('[id="code"]').type(email);
@@ -34,32 +32,11 @@ function createEmail(email) {
   });
 }  
 
-//Функция для получения полного имени пользователя
-// function getFullName(){
-//   cy.openSignInPage()
-//   cy.contains('Team').click()
-//   cy.get('._teamContainer_1ywjc_45').find('._container_rgcng_1').eq(2).then(teammateItem => {
-//     cy.wrap(teammateItem).find('[type="submit"]').click()
-//   })
-//   cy.get('form').then(form => {
-//     cy.wrap(form).find('[name="first_name"]').invoke('text').then(text => {  
-//       const extractedFirstName = text.trim()
-//     })
-//     cy.wrap(form).find('[name="last_name"]').invoke('text').then(text => {  
-//       const extractedLastName = text.trim()
-//     })
-//     const fullName = extractedFirstName + ' ' + extractedLastName
-// })
-
-// return fullName
-// }
-
-
 export class TeamPage{
   
   
   //Создание нового пользователя , подтверждение Email и удаление этого пользователя
-  createNewTeammate(firstName, lastName, userRole) {
+  createNewTeammate(firstName, lastName, userRole, userPermission) {
  
     cy.get('._currentHeaderContainer_1g353_17').find('button').click()
     cy.get('form').then(createTeammateForm => {
@@ -71,7 +48,7 @@ export class TeamPage{
       cy.wrap(createTeammateForm).contains('Select Roles').click({ force: true });
       cy.wrap(createTeammateForm).get('.css-5dm6m1').contains(userRole).click()
       cy.wrap(createTeammateForm).get('#react-select-3-placeholder').click({ force: true }) 
-      cy.wrap(createTeammateForm).get('.css-5dm6m1').contains('Admin').click()
+      cy.wrap(createTeammateForm).get('.css-5dm6m1').contains(userPermission).click()
       cy.wrap(createTeammateForm).find('[placeholder="example@company.com"]').type(`${email + '@qa.team'}`)
       cy.wrap(createTeammateForm).submit()
       cy.wait(5000)
@@ -82,15 +59,10 @@ export class TeamPage{
       cy.wait(1000)
       cy.contains('Team').click()
       const fullname = firstName + ' ' + lastName;
-      cy.get('._inputContainer_wk24h_8').find('[placeholder="Search"]').type('fullname')
-
-      cy.contains('div', `${firstName} ${lastName}`).as('userDiv');
-      cy.get('@userDiv').parent().invoke('attr', 'class').then(classes => {
-        cy.wrap(classes).find('button').click()
-      });
-      // cy.get('._container_rgcng_1').contains(fullname).then(userItem => {
-      //   cy.wrap(userItem).find('[type="submit"]').click()
-      // })
+      cy.get('._inputContainer_wk24h_8').find('[placeholder="Search"]').type(fullname)
+      cy.get('._container_rgcng_1').find('[type="submit"]').click()
+      cy.get('[type="button"]').contains('Delete account').click()
+      cy.get('[id="modalContent"]').find('[type="button"]').contains('Delete').click()
     })
   } 
 
@@ -110,12 +82,11 @@ export class TeamPage{
          extractedLastName = text.trim()
       })
       
-      // getFullName()
       cy.wrap(form).get('.css-1tkm9rf-control').click()
       cy.wrap(form).get('.css-5dm6m1').contains('QA').click()
       cy.wrap(form).find('[name="capacity"]').clear().type(55)
     })
-    const fullName = extractedFirstName + ' ' + extractedLastName
+    
     cy.get('._innerContainer_1gsgj_7').then(page => {
       if(page.hasClass('_container_193f7_1')){
         cy.get('._container_193f7_1').find('._project_193f7_7').eq(0).then(assignedProject => {
@@ -126,7 +97,7 @@ export class TeamPage{
       }
     })
    
-
+    const fullName = extractedFirstName + ' ' + extractedLastName
     if('._container_zw3bf_1')
     cy.get('._container_zw3bf_1').find('._container_p0yir_1').contains('Member').click()
     cy.get('._saveBtn_1jxaf_15').find('[type="submit"]').click()

@@ -24,7 +24,7 @@ describe('Smoke testing', () => {
 
   it.only('Login to admin account , create a teammate, confirm emails and delete the created teammate', () => {
     navigateTo.teamPage()
-    onTeamPage.createNewTeammate('Ihor1', 'Haidadin1', 'QA')  //firstName, lastName & userRole(QA, Developer, PM, Designer, No position)    
+    onTeamPage.createNewTeammate('Ihor1', 'Haidadin1', 'QA', 'Admin')  //firstName, lastName, userRole(QA, Developer, PM, Designer, No position), userPermissions    
     })
 
   it('', () => {
