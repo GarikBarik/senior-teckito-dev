@@ -17,7 +17,7 @@ export class NavigationPage{
   }
   
   profileSettingsPage(){
-    cy.get('._userLogo_1i0pb_122').click()
+    cy.get('._userName_1h04b_139').click()
   }
 }
 export const navigateTo = new NavigationPage()
